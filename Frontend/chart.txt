@@ -1,0 +1,407 @@
+# FLOWCHART APLIKASI STNK CHECK UAD - VERSI DETAIL & TERSTRUKTUR
+# Copy kode di bawah ini ke tools yang mendukung Mermaid (GitHub, Mermaid Live Editor, dll)
+
+## VERSI 1: FLOWCHART UTAMA LENGKAP
+
+```mermaid
+flowchart TD
+    %% === BAGIAN 1: INISIALISASI APLIKASI ===
+    A[START APLIKASI] --> B[Inisialisasi Flutter Engine]
+    B --> C[Inisialisasi Firebase Core]
+    C --> D[Konfigurasi Firebase Options]
+    D --> E[Inisialisasi Firebase Auth]
+    E --> F[Inisialisasi Firebase Database]
+    F --> G[Splash Screen dengan Animasi]
+    G --> H{Check Status Login User}
+    
+    %% === BAGIAN 2: SISTEM AUTENTIKASI ===
+    H -->|User Belum Login| I[Auth Screen]
+    H -->|User Sudah Login| J[Main Navigation Screen]
+    
+    I --> K{Mode Autentikasi}
+    K -->|Login| L[Form Login]
+    K -->|Register| M[Form Register]
+    
+    L --> N[Validasi Input Email & Password]
+    N --> O{Input Valid?}
+    O -->|Tidak| P[Tampilkan Error Message]
+    P --> L
+    
+    O -->|Ya| Q[Firebase Auth Sign In]
+    Q --> R{Login Berhasil?}
+    R -->|Tidak| S[Tampilkan Error Firebase]
+    S --> L
+    
+    M --> T[Validasi Input Register]
+    T --> U{Input Valid?}
+    U -->|Tidak| V[Tampilkan Error Message]
+    V --> M
+    
+    U -->|Ya| W[Firebase Auth Create User]
+    W --> X{Register Berhasil?}
+    X -->|Tidak| Y[Tampilkan Error Firebase]
+    Y --> M
+    
+    X -->|Ya| Z[Update Display Name User]
+    Z --> AA[Simpan Profil ke Database]
+    AA --> BB[Login Otomatis]
+    
+    R -->|Ya| J
+    BB --> J
+    
+    %% === BAGIAN 3: NAVIGASI UTAMA ===
+    J --> CC[Bottom Navigation Bar]
+    CC --> DD[5 Tab Utama]
+    
+    %% === BAGIAN 4: TAB 1 - BARCODE SCANNER ===
+    DD --> EE[Tab 1: Barcode Scanner]
+    EE --> FF[Inisialisasi Mobile Scanner Controller]
+    FF --> GG[Request Permission Kamera]
+    GG --> HH{Permission Diberikan?}
+    HH -->|Tidak| II[Tampilkan Dialog Permission]
+    II --> GG
+    
+    HH -->|Ya| JJ[Start Kamera]
+    JJ --> KK[Scan Barcode/QR Code]
+    KK --> LL{Scan Berhasil?}
+    LL -->|Tidak| KK
+    
+    LL -->|Ya| MM[Parse Data Barcode]
+    MM --> NN[Ekstrak NIM atau Nomor Kendaraan]
+    NN --> OO[Cari Data Mahasiswa di Firebase]
+    OO --> PP{Data Ditemukan?}
+    PP -->|Ya| QQ[Tampilkan Result Screen]
+    PP -->|Tidak| RR[Prompt Tambah Data Baru]
+    
+    QQ --> SS[Simpan Riwayat Scan ke Firebase]
+    SS --> TT{Simpan Berhasil?}
+    TT -->|Ya| UU[Success Message]
+    TT -->|Tidak| VV[Error Message + Retry]
+    
+    RR --> WW[Navigate ke Add/Edit Student Screen]
+    
+    %% === BAGIAN 5: TAB 2 - OCR TEXT RECOGNITION ===
+    DD --> XX[Tab 2: OCR Text Recognition]
+    XX --> YY{Pilih Sumber Gambar}
+    YY -->|Kamera| ZZ[Image Picker - Camera]
+    YY -->|Galeri| AAA[Image Picker - Gallery]
+    
+    ZZ --> BBB[Capture Image dari Kamera]
+    AAA --> BBB
+    BBB --> CCC{Image Berhasil Diambil?}
+    CCC -->|Tidak| DDD[Error Message]
+    DDD --> YY
+    
+    CCC -->|Ya| EEE[Proses OCR dengan Google ML Kit]
+    EEE --> FFF[Ekstrak Teks dari Gambar]
+    FFF --> GGG{OCR Berhasil?}
+    GGG -->|Tidak| HHH[Error OCR Message]
+    HHH --> YY
+    
+    GGG -->|Ya| III[Parse Teks Hasil OCR]
+    III --> JJJ[Ekstrak Informasi Mahasiswa]
+    JJJ --> KKK{Data Mahasiswa Ditemukan?}
+    KKK -->|Ya| LL[Navigate ke Result Screen]
+    KKK -->|Tidak| MM[Prompt Tambah Data dari OCR]
+    
+    MM --> WW
+    
+    %% === BAGIAN 6: TAB 3 - MANAJEMEN DATA MAHASISWA ===
+    DD --> NNN[Tab 3: Daftar Mahasiswa]
+    NNN --> OOO[Ambil Data dari Firebase Database]
+    OOO --> PPP[Tampilkan List Mahasiswa]
+    PPP --> QQQ{User Action}
+    
+    QQQ -->|Tambah Data| RRR[Navigate ke Add Student Screen]
+    QQQ -->|Edit Data| SSS[Navigate ke Edit Student Screen]
+    QQQ -->|Hapus Data| TTT[Konfirmasi Hapus]
+    
+    RRR --> UUU[Form Input Data Mahasiswa]
+    UUU --> VVV[Validasi Input]
+    VVV --> WWW{Input Valid?}
+    WWW -->|Tidak| XXX[Error Message]
+    XXX --> UUU
+    
+    WWW -->|Ya| YYY[Simpan ke Firebase Database]
+    YYY --> ZZZ{Simpan Berhasil?}
+    ZZZ -->|Ya| AAAA[Success Message + Refresh List]
+    ZZZ -->|Tidak| BBBB[Error Message + Retry]
+    
+    SSS --> UUU
+    TTT --> CCCC[Konfirmasi Final]
+    CCCC --> DDDD{Hapus Data?}
+    DDDD -->|Ya| EEEE[Hapus dari Firebase Database]
+    DDDD -->|Tidak| PPP
+    
+    EEEE --> FFFF{Hapus Berhasil?}
+    FFFF -->|Ya| GGGG[Success Message + Refresh List]
+    FFFF -->|Tidak| HHHH[Error Message + Retry]
+    
+    AAAA --> PPP
+    GGGG --> PPP
+    
+    %% === BAGIAN 7: TAB 4 - RIWAYAT SCAN ===
+    DD --> IIII[Tab 4: Riwayat Scan]
+    IIII --> JJJJ[Ambil Data Riwayat dari Firebase]
+    JJJJ --> KKKK[Tampilkan List Riwayat Scan]
+    KKKK --> LLLL{User Action}
+    
+    LLLL -->|Lihat Detail| MMMM[Tampilkan Detail Scan]
+    LLLL -->|Filter Data| NNNN[Filter berdasarkan Tanggal]
+    LLLL -->|Filter Data| OOOO[Filter berdasarkan Metode Scan]
+    LLLL -->|Export Data| PPPP[Export ke CSV/PDF]
+    
+    MMMM --> QQQQ[Detail Informasi Scan]
+    NNNN --> RRRR[Filter Tanggal Awal]
+    OOOO --> SSSS[Filter Metode Barcode/OCR]
+    PPPP --> TTTT[Generate File Export]
+    
+    %% === BAGIAN 8: TAB 5 - PROFIL USER ===
+    DD --> UUUU[Tab 5: Profil User]
+    UUUU --> VVVV[Tampilkan Informasi User]
+    VVVV --> WWWW{User Action}
+    
+    WWWW -->|Edit Profil| XXXX[Navigate ke Edit Profile Screen]
+    WWWW -->|Ganti Password| YYYY[Form Ganti Password]
+    WWWW -->|Logout| ZZZZ[Konfirmasi Logout]
+    
+    XXXX --> AAAAA[Form Edit Profil]
+    AAAAA --> BBBBB[Validasi Input]
+    BBBBB --> CCCCC{Input Valid?}
+    CCCCC -->|Tidak| DDDDD[Error Message]
+    DDDDD --> AAAAA
+    
+    CCCCC -->|Ya| EEEEE[Update ke Firebase Database]
+    EEEEE --> FFFFF{Update Berhasil?}
+    FFFFF -->|Ya| GGGGG[Success Message + Refresh Profil]
+    FFFFF -->|Tidak| HHHHH[Error Message + Retry]
+    
+    YYYY --> IIIII[Form Password Baru]
+    IIIII --> JJJJJ[Validasi Password]
+    JJJJJ --> KKKKK{Password Valid?}
+    KKKKK -->|Tidak| LLLLL[Error Message]
+    LLLLL --> IIIII
+    
+    KKKKK -->|Ya| MMMMM[Update Password di Firebase Auth]
+    MMMMM --> NNNNN{Update Berhasil?}
+    NNNNN -->|Ya| OOOOO[Success Message]
+    NNNNN -->|Tidak| PPPPP[Error Message + Retry]
+    
+    ZZZZ --> QQQQQ[Konfirmasi Final Logout]
+    QQQQQ --> RRRRR{Logout?}
+    RRRRR -->|Ya| SSSSS[Firebase Sign Out]
+    RRRRR -->|Tidak| VVVV
+    
+    SSSSS --> TTTTT[Clear Local Data]
+    TTTTT --> UUUUU[Navigate ke Auth Screen]
+    
+    %% === BAGIAN 9: DATA FLOW & INTEGRASI ===
+    SS --> VVVVV[Firebase Realtime Database]
+    YYY --> VVVVV
+    EEEE --> VVVVV
+    EEEEE --> VVVVV
+    MMMMM --> VVVVV
+    
+    %% === BAGIAN 10: ERROR HANDLING & LOGGING ===
+    VV --> WWWWW[Log Error ke Firebase Crashlytics]
+    BBBB --> WWWWW
+    HHHH --> WWWWW
+    HHHHH --> WWWWW
+    PPPPP --> WWWWW
+    
+    %% === STYLING UNTUK KATEGORI ===
+    classDef initClass fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    classDef authClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef mainClass fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef scannerClass fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef ocrClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    classDef studentClass fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+    classDef historyClass fill:#f1f8e9,stroke:#558b2f,stroke-width:2px,color:#000
+    classDef profileClass fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+    classDef dataClass fill:#fafafa,stroke:#424242,stroke-width:2px,color:#000
+    classDef errorClass fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+    
+    class A,B,C,D,E,F,G,H initClass
+    class I,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,BB authClass
+    class J,CC,DD mainClass
+    class EE,FF,GG,HH,II,JJ,KK,LL,MM,NN,OO,PP,QQ,RR,SS,TT,UU,VV,WW scannerClass
+    class XX,YY,ZZ,AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III,JJJ,KKK,LL,MM ocrClass
+    class NNN,OOO,PPP,QQQ,RRR,SSS,TTT,UUU,VVV,WWW,XXX,YYY,ZZZ,AAAA,BBBB,CCCC,DDDD,EEEE,FFFF,GGGG,HHHH studentClass
+    class IIII,JJJJ,KKKK,LLLL,MMMM,NNNN,OOOO,PPPP,QQQQ,RRRR,SSSS,TTTT historyClass
+    class UUUU,VVVV,WWWW,XXXX,YYYY,ZZZZ,AAAAA,BBBBB,CCCCC,DDDDD,EEEEE,FFFFF,GGGGG,HHHHH,IIIII,JJJJJ,KKKKK,LLLLL,MMMMM,NNNNN,OOOOO,PPPPP,QQQQQ,RRRRR,SSSSS,TTTTT profileClass
+    class VVVVV dataClass
+    class WWWWW errorClass
+```
+
+## VERSI 2: FLOWCHART HORIZONTAL KOMPAK
+
+```mermaid
+flowchart LR
+    %% === INISIALISASI ===
+    A[START] --> B[Flutter Init] --> C[Firebase Init] --> D[Auth Check]
+    
+    %% === AUTENTIKASI ===
+    D -->|Login| E[Main App]
+    D -->|Logout| F[Auth Screen] --> G{Mode}
+    G -->|Login| H[Sign In]
+    G -->|Register| I[Sign Up]
+    H --> J{Success}
+    I --> J
+    J -->|Success| E
+    J -->|Failed| F
+    
+    %% === FITUR UTAMA ===
+    E --> K[5 TABS]
+    
+    %% === TAB SCANNER ===
+    K --> L[Scanner]
+    L --> L1[Camera] --> L2[Scan] --> L3[Search DB] --> L4{Found}
+    L4 -->|Yes| L5[Result] --> L6[Save History]
+    L4 -->|No| L7[Add New]
+    
+    %% === TAB OCR ===
+    K --> M[OCR]
+    M --> M1{Source} --> M2[Camera] --> M3[Process] --> M4[Parse]
+    M1 --> M5[Gallery] --> M3
+    M4 --> M6{Found} --> L5
+    M6 -->|No| L7
+    
+    %% === TAB MAHASISWA ===
+    K --> N[Students]
+    N --> N1[List] --> N2{Action} --> N3[Add] --> N4[Save DB]
+    N2 --> N5[Edit] --> N4
+    N2 --> N6[Delete] --> N7[Remove DB]
+    
+    %% === TAB RIWAYAT ===
+    K --> O[History]
+    O --> O1[Get Data] --> O2[Display] --> O3{Action} --> O4[Detail]
+    O3 --> O5[Filter]
+    
+    %% === TAB PROFIL ===
+    K --> P[Profile]
+    P --> P1[Info] --> P2{Action} --> P3[Edit] --> P4[Update DB]
+    P2 --> P5[Logout] --> F
+    
+    %% === DATA FLOW ===
+    L6 --> Q[Firebase DB]
+    N4 --> Q
+    P4 --> Q
+    
+    %% === STYLING ===
+    classDef startClass fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef authClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef mainClass fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef tabClass fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef dataClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class A,B,C,D startClass
+    class F,G,H,I,J authClass
+    class E,K mainClass
+    class L,M,N,O,P tabClass
+    class Q dataClass
+```
+
+## VERSI 3: FLOWCHART SEDERHANA UNTUK PRESENTASI
+
+```mermaid
+flowchart TD
+    A[Start Aplikasi] --> B[Inisialisasi Firebase]
+    B --> C[Splash Screen]
+    C --> D{User Sudah Login?}
+    
+    D -->|Ya| E[Main Navigation Screen]
+    D -->|Tidak| F[Auth Screen]
+    
+    F --> G{Mode?}
+    G -->|Login| H[Firebase Auth Login]
+    G -->|Register| I[Firebase Auth Register]
+    
+    H --> J{Login Berhasil?}
+    I --> J
+    J -->|Ya| E
+    J -->|Tidak| F
+    
+    E --> K[5 Tab Utama]
+    
+    K --> L[Tab 1: Barcode Scanner]
+    K --> M[Tab 2: OCR]
+    K --> N[Tab 3: Daftar Mahasiswa]
+    K --> O[Tab 4: Riwayat Scan]
+    K --> P[Tab 5: Profil]
+    
+    L --> L1[Inisialisasi Kamera] --> L2[Scan Barcode] --> L3[Cari Data] --> L4{Data Ditemukan?}
+    L4 -->|Ya| L5[Tampilkan Result]
+    L4 -->|Tidak| L6[Prompt Tambah Data]
+    
+    M --> M1{Pilih Sumber} --> M2[Kamera] --> M3[Proses OCR] --> M4[Parse Data]
+    M1 --> M5[Galeri] --> M3
+    M4 --> M6{Data Ditemukan?} --> L5
+    M6 -->|Tidak| L6
+    
+    N --> N1[Tampilkan List] --> N2{Action} --> N3[Tambah/Edit/Hapus]
+    O --> O1[Ambil Data] --> O2[Tampilkan List]
+    P --> P1[Info User] --> P2{Action} --> P3[Edit/Logout]
+    
+    L5 --> Q[Simpan ke Firebase]
+    N3 --> Q
+    P3 --> Q
+```
+
+# CARA PENGGUNAAN:
+
+1. Copy salah satu kode flowchart di atas (sesuai kebutuhan)
+2. Paste ke tools yang mendukung Mermaid:
+   - GitHub (dalam markdown dengan ```mermaid)
+   - Mermaid Live Editor (mermaid.live)
+   - Notion
+   - Obsidian
+   - VS Code dengan extension Mermaid
+
+3. Pilih versi yang sesuai:
+   - Versi 1: Lengkap dengan detail maksimal dan terstruktur
+   - Versi 2: Horizontal, lebih kompak untuk overview
+   - Versi 3: Sederhana untuk presentasi
+
+# DESKRIPSI FITUR UTAMA:
+
+## Barcode Scanner
+- Inisialisasi kamera dengan permission handling
+- Scan barcode/QR code dari KTM mahasiswa
+- Parse data dan cari di database Firebase
+- Tampilkan hasil atau prompt tambah data baru
+- Simpan riwayat scan dengan timestamp
+
+## OCR Text Recognition
+- Pilihan sumber gambar (kamera/galeri)
+- Proses OCR menggunakan Google ML Kit
+- Ekstrak dan parse informasi mahasiswa
+- Integrasi dengan sistem pencarian data
+- Fallback ke form tambah data jika tidak ditemukan
+
+## Manajemen Data Mahasiswa
+- CRUD operations lengkap (Create, Read, Update, Delete)
+- Validasi input yang komprehensif
+- Integrasi real-time dengan Firebase Database
+- Error handling dan retry mechanism
+- Refresh data otomatis setelah operasi
+
+## Riwayat Scan
+- Tracking semua aktivitas scan dengan detail
+- Filter berdasarkan tanggal, metode scan, lokasi
+- Export data ke format CSV/PDF
+- Detail informasi setiap scan operation
+- Analytics dan reporting
+
+## Profil User
+- Manajemen akun pengguna lengkap
+- Edit profil dengan validasi
+- Ganti password dengan konfirmasi
+- Logout dengan konfirmasi
+- Integrasi dengan Firebase Auth
+
+## Sistem Integrasi
+- Firebase Authentication untuk user management
+- Firebase Realtime Database untuk data storage
+- Firebase Crashlytics untuk error tracking
+- Real-time synchronization
+- Offline capability dengan local caching

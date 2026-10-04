@@ -1,0 +1,9 @@
+{
+  "cmake.sourceDirectory": "C:/Users/HP/Documents/FLUTTER/stnk_check_uad/linux/flutter",
+  "codium.codeCompletion.enable": false,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+  "dart.flutterHotReloadOnSave": "all",
+  "dart.hotReloadOnSave": "all",
+  "dart.previewHotReloadOnSaveWatcher": true
+}

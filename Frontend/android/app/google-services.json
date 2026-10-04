@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "783640941271",
+    "firebase_url": "https://scan-ktm-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "scan-ktm",
+    "storage_bucket": "scan-ktm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783640941271:android:46ee22d68cc47cf038d692",
+        "android_client_info": {
+          "package_name": "com.example.stnk_check_uad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs8joSVOJTM_3S93F6pTOc3vyERJ7mjb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,158 @@
+{
+  "students": {
+    "2200018051": {
+      "name": "AHMAD RIZKI",
+      "nim": "2200018051",
+      "faculty": "FTI",
+      "studyProgram": "SISTEM INFORMASI",
+      "vehicleNumber": "AB 1234 SI",
+      "vehicleType": "PCX",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018052": {
+      "name": "SITI NURHALIZAH",
+      "nim": "2200018052",
+      "faculty": "FEB",
+      "studyProgram": "MANAJEMEN",
+      "vehicleNumber": "AB 5678 MN",
+      "vehicleType": "VARIO",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018053": {
+      "name": "MUHAMMAD FADLI",
+      "nim": "2200018053",
+      "faculty": "FEB",
+      "studyProgram": "AKUNTANSI",
+      "vehicleNumber": "AB 9012 AK",
+      "vehicleType": "NMAX",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018054": {
+      "name": "DEWI SARTIKA",
+      "nim": "2200018054",
+      "faculty": "FK",
+      "studyProgram": "KEDOKTERAN",
+      "vehicleNumber": "AB 3456 KD",
+      "vehicleType": "ADV",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018055": {
+      "name": "BUDI SANTOSO",
+      "nim": "2200018055",
+      "faculty": "FT",
+      "studyProgram": "TEKNIK SIPIL",
+      "vehicleNumber": "AB 7890 TS",
+      "vehicleType": "CB150R",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018056": {
+      "name": "RINA WATI",
+      "nim": "2200018056",
+      "faculty": "FT",
+      "studyProgram": "TEKNIK MESIN",
+      "vehicleNumber": "AB 1357 TM",
+      "vehicleType": "GSX-R150",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018057": {
+      "name": "AGUS SETIAWAN",
+      "nim": "2200018057",
+      "faculty": "FISIP",
+      "studyProgram": "ILMU KOMUNIKASI",
+      "vehicleNumber": "AB 2468 IK",
+      "vehicleType": "XSR155",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018058": {
+      "name": "NURUL HIDAYAH",
+      "nim": "2200018058",
+      "faculty": "FISIP",
+      "studyProgram": "ILMU POLITIK",
+      "vehicleNumber": "AB 3690 IP",
+      "vehicleType": "MT15",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018059": {
+      "name": "JOKO WIDODO",
+      "nim": "2200018059",
+      "faculty": "FH",
+      "studyProgram": "ILMU HUKUM",
+      "vehicleNumber": "AB 1470 IH",
+      "vehicleType": "R15",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018060": {
+      "name": "MEGAWATI SOEKARNOPUTRI",
+      "nim": "2200018060",
+      "faculty": "FISIP",
+      "studyProgram": "ILMU POLITIK",
+      "vehicleNumber": "AB 2580 IP",
+      "vehicleType": "VESPA",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018061": {
+      "name": "PRABOWO SUBIANTO",
+      "nim": "2200018061",
+      "faculty": "FT",
+      "studyProgram": "TEKNIK ELEKTRO",
+      "vehicleNumber": "AB 3691 TE",
+      "vehicleType": "DUCATI",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018062": {
+      "name": "GIBRAN RAKABUMING",
+      "nim": "2200018062",
+      "faculty": "FTI",
+      "studyProgram": "INFORMATIKA",
+      "vehicleNumber": "AB 1472 IF",
+      "vehicleType": "HONDA CBR",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018063": {
+      "name": "KAESANG PANGAREP",
+      "nim": "2200018063",
+      "faculty": "FEB",
+      "studyProgram": "MANAJEMEN",
+      "vehicleNumber": "AB 2583 MN",
+      "vehicleType": "KAWASAKI NINJA",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    },
+    "2200018064": {
+      "name": "SELVI ANASTASIA",
+      "nim": "2200018064",
+      "faculty": "FK",
+      "studyProgram": "KEDOKTERAN GIGI",
+      "vehicleNumber": "AB 3694 KG",
+      "vehicleType": "YAMAHA XSR",
+      "scanTime": 1703123456789,
+      "createdAt": 1703123456789,
+      "updatedAt": 1703123456789
+    }
+  }
+}
