@@ -85,20 +85,19 @@ class SyncService {
       Logger.info('Pulling students from Backend Express & Supabase...');
       final students = await ApiService.getAllStudents(limit: 2000);
 
-      if (students.isNotEmpty) {
-        await _localDb.batchUpsertStudents(students);
-        Logger.info('Successfully synced ${students.length} students to SQLite');
-        return students.length;
-      } else {
-        // Cek jika data lokal sudah ada, jangan hapus
-        final count = await _localDb.getStudentCount();
-        Logger.info('No students fetched from Backend. Local count: $count');
-        return count;
-      }
+      // Sinkronkan penuh dengan data backend (jika backend kosong, kosongkan juga di SQLite)
+      await _localDb.replaceAllStudents(students);
+      Logger.info('Successfully synced ${students.length} students to SQLite');
+      return students.length;
     } catch (e) {
       Logger.error('Error pulling students from Backend: $e');
-      return 0;
+      rethrow;
     }
+  }
+
+  /// Kosongkan database lokal SQLite (cache mahasiswa & riwayat)
+  Future<void> clearLocalDatabase() async {
+    await _localDb.clearAll();
   }
 
   /// Upload riwayat scan lokal yang berstatus is_synced == 0 ke Backend

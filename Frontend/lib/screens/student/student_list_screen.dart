@@ -543,7 +543,7 @@ class _StudentListScreenState extends State<StudentListScreen>
           ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: _loadStudents,
+              onRefresh: _handleSync,
               color: Theme.of(context).colorScheme.primary,
               child: SingleChildScrollView(
                 controller: _scrollController,

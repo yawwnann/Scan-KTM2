@@ -163,6 +163,41 @@ class LocalDatabaseService {
     }
   }
 
+  /// Sinkronisasi penuh data mahasiswa: mengosongkan cache lama dan menggantikannya dengan data backend
+  Future<int> replaceAllStudents(List<Student> students) async {
+    try {
+      final db = await database;
+      final batch = db.batch();
+      batch.delete('students');
+
+      for (final student in students) {
+        batch.insert(
+          'students',
+          _studentToMap(student),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+
+      await batch.commit(noResult: true);
+      Logger.info('SQLite replaceAllStudents: synced ${students.length} students');
+      return students.length;
+    } catch (e) {
+      Logger.error('SQLite replaceAllStudents error: $e');
+      return 0;
+    }
+  }
+
+  /// Menghapus seluruh cache mahasiswa di SQLite lokal
+  Future<void> clearStudents() async {
+    try {
+      final db = await database;
+      await db.delete('students');
+      Logger.info('SQLite clearStudents: all students removed');
+    } catch (e) {
+      Logger.error('SQLite clearStudents error: $e');
+    }
+  }
+
   Future<List<Student>> getAllStudents({int limit = 50, int offset = 0}) async {
     try {
       final db = await database;

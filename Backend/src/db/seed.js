@@ -3,8 +3,18 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const { getPool } = require('../config/db');
 const logger = require('../utils/logger');
+const { clearDatabase } = require('./clear');
 
 async function runSeed() {
+  if (process.argv.includes('--clear') || process.argv.includes('--clean')) {
+    await clearDatabase();
+    process.exit(0);
+  }
+
+  if (process.argv.includes('--reset') || process.argv.includes('--fresh')) {
+    await clearDatabase();
+  }
+
   logger.info('🚀 Memulai proses seeding data ke Supabase PostgreSQL...');
 
   try {

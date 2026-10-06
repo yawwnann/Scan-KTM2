@@ -62,7 +62,8 @@ Backend/
 │   └── db/
 │       ├── schema.sql        # Skema DDL PostgreSQL untuk Supabase
 │       ├── migrate.js        # Script auto-migration skema ke Supabase
-│       └── seed.js           # Seeding data contoh dari firebase_data.json
+│       ├── seed.js           # Seeding data contoh dari firebase_data.json
+│       └── clear.js          # Seeder pembersih (hapus seluruh data database)
 └── tests/
     └── api.test.js           # Automated test suite (Jest + Supertest)
 ```
@@ -99,7 +100,16 @@ npm run seed
 > - Email: `admin@uad.ac.id`
 > - Password: `admin123`
 
-### 4. Jalankan Server
+### 4. Menghapus / Membersihkan Semua Data (Clear Seeder)
+Jika Anda ingin menghapus seluruh data pada database Supabase (`students`, `vehicles`, `scan_history`, `benchmark_logs`, dan `users`):
+```bash
+npm run seed:clear
+```
+> **Catatan Opsi**:
+> - Jalankan `npm run seed:clear -- --keep-users` jika ingin menghapus seluruh data transaksi/mahasiswa/kendaraan tanpa menghapus akun pengguna (users).
+> - Jalankan `npm run seed:reset` untuk mengosongkan seluruh database lalu langsung mengisinya kembali dengan data default.
+
+### 5. Jalankan Server
 ```bash
 # Mode pengembangan (auto-reload)
 npm run dev

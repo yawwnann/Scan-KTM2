@@ -677,6 +677,52 @@ class _SyncCardState extends State<_SyncCard> {
     }
   }
 
+  Future<void> _handleClearLocal() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.delete_outline, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Kosongkan SQLite?'),
+          ],
+        ),
+        content: const Text(
+          'Seluruh cache data mahasiswa dan riwayat lokal di SQLite perangkat akan dihapus.\n\nData di backend Supabase tidak akan terpengaruh dan dapat disinkronkan kembali kapan saja.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hapus Data Lokal', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() => _isLoading = true);
+      await _localDb.clearAll();
+      await _loadSyncInfo();
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Database lokal SQLite berhasil dikosongkan.'),
+            backgroundColor: Colors.orange[800],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
+    }
+  }
+
   String _formatSyncTime(DateTime? time) {
     if (time == null) return 'Belum pernah sinkron';
     final diff = DateTime.now().difference(time);
@@ -907,6 +953,29 @@ class _SyncCardState extends State<_SyncCard> {
                       backgroundColor: const Color(0xFF1565C0),
                       foregroundColor: Colors.white,
                       elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 42,
+                  child: OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _handleClearLocal,
+                    icon: Icon(Icons.delete_sweep_rounded, size: 18, color: Colors.red[700]),
+                    label: Text(
+                      'Kosongkan Cache SQLite Lokal',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: Colors.red[700],
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.red.shade300),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

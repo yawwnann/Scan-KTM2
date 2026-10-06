@@ -35,22 +35,24 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   void _initializeCamera() {
     cameraController = MobileScannerController(
       torchEnabled: false,
-      autoStart: false, // Wajib false agar tidak double init
+      detectionSpeed: DetectionSpeed.noDuplicates,
     );
+  }
 
-    cameraController
-        .start()
-        .then((_) {
-          if (mounted) {
-            setState(() {
-              isCameraInitialized = true;
-            });
-            _startQrSession();
-          }
-        })
-        .catchError((error) {
-          print('Camera initialization error: $error');
-        });
+  Future<void> _retryCamera() async {
+    if (!mounted) return;
+    setState(() {
+      isCameraInitialized = false;
+    });
+    try {
+      await cameraController.stop();
+    } catch (_) {}
+    try {
+      await cameraController.start();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Retry camera error: $e');
+    }
   }
 
   Future<void> _startQrSession() async {
@@ -75,7 +77,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
         _pauseCamera();
         break;
       case AppLifecycleState.resumed:
-        if (!isNavigating) {
+        if (!isNavigating && !cameraController.isStarting) {
           _resumeCamera();
         }
         break;
@@ -97,7 +99,10 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
 
   void _resumeCamera() {
     try {
-      if (mounted && !isNavigating && isCameraInitialized) {
+      if (mounted &&
+          !isNavigating &&
+          isCameraInitialized &&
+          !cameraController.isStarting) {
         cameraController.start();
         _startQrSession();
       }
@@ -832,16 +837,24 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                               children: [
                                 // Scanner content
                                 if (PlatformConfig.enableScanner)
-                                  Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      MobileScanner(
-                                        controller: cameraController,
-                                        onDetect: _onDetect,
-                                      ),
-                                      if (!isCameraInitialized)
-                                        _buildCameraLoadingWidget(),
-                                    ],
+                                  MobileScanner(
+                                    controller: cameraController,
+                                    onScannerStarted: (arguments) {
+                                      if (mounted) {
+                                        setState(() {
+                                          isCameraInitialized = true;
+                                        });
+                                        _startQrSession();
+                                      }
+                                    },
+                                    errorBuilder: (context, error, child) {
+                                      return _buildCameraErrorWidget(error);
+                                    },
+                                    placeholderBuilder: (context, child) {
+                                      return _buildCameraLoadingWidget();
+                                    },
+                                    fit: BoxFit.cover,
+                                    onDetect: _onDetect,
                                   )
                                 else
                                   _buildUnsupportedPlatformWidget(),
@@ -1226,6 +1239,88 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
     );
   }
 
+  Widget _buildCameraErrorWidget(MobileScannerException error) {
+    String message = 'Terjadi kesalahan pada kamera.';
+    switch (error.errorCode) {
+      case MobileScannerErrorCode.permissionDenied:
+        message =
+            'Izin kamera ditolak. Harap berikan izin akses kamera di pengaturan perangkat.';
+        break;
+      case MobileScannerErrorCode.unsupported:
+        message = 'Perangkat ini tidak mendukung pemindaian kamera.';
+        break;
+      case MobileScannerErrorCode.controllerUninitialized:
+        message = 'Kamera belum siap.';
+        break;
+      default:
+        message = error.errorDetails?.message?.isNotEmpty == true
+            ? error.errorDetails!.message!
+            : 'Gagal mengaktifkan kamera. Silakan coba lagi.';
+        break;
+    }
+
+    return Container(
+      color: Colors.grey[900],
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.videocam_off_rounded,
+                size: 36,
+                color: Colors.redAccent,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Kamera Tidak Terbuka',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 13,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _retryCamera,
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text('Coba Lagi'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1565C0),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _toggleFlash() async {
     try {
       if (isCameraInitialized) {
@@ -1233,7 +1328,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
       }
     } catch (e) {
       // ignore: avoid_print
-      print('Error toggling flash: ');
+      print('Error toggling flash: $e');
     }
   }
 
